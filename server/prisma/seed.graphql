@@ -1,0 +1,5 @@
+mutation {
+  post1: createItem(data: { content: "here's the first item" }) {
+    id
+  }
+}
