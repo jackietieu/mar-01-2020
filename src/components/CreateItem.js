@@ -17,7 +17,7 @@ const CreateItem = () => {
         });
       }}
     >
-      {(createDraft, { data, loading, error }) => {
+      {createDraft => {
         return (
           <>
             <form

@@ -1,5 +1,5 @@
 import React from "react";
-import { Query } from "react-apollo";
+import { Mutation, Query } from "react-apollo";
 import { gql } from "apollo-boost";
 
 const Items = () => {
@@ -13,12 +13,45 @@ const Items = () => {
         if (error) {
           return <span>An unexpected error occured.</span>;
         }
-        console.log({ data });
+
+        const { items } = data;
+
         return (
           <>
             <h1>Items</h1>
-            {data.items &&
-              data.items.map(item => <div key={item.id}>{item.content}</div>)}
+            <Mutation
+              mutation={DELETE_ITEM_MUTATION}
+              update={(cache, { data: { deleteItem } }) => {
+                const { items } = cache.readQuery({ query: ITEMS_QUERY });
+
+                cache.writeQuery({
+                  query: ITEMS_QUERY,
+                  data: {
+                    items: items.filter(item => item.id !== deleteItem.id)
+                  }
+                });
+              }}
+            >
+              {deleteItem =>
+                items &&
+                items.map(item => (
+                  <div key={item.id}>
+                    {item.content}
+                    <button
+                      onClick={e => {
+                        deleteItem({
+                          variables: {
+                            id: item.id
+                          }
+                        });
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))
+              }
+            </Mutation>
           </>
         );
       }}
@@ -33,6 +66,14 @@ export const ITEMS_QUERY = gql`
     items {
       id
       content
+    }
+  }
+`;
+
+const DELETE_ITEM_MUTATION = gql`
+  mutation DeleteItemMutation($id: ID!) {
+    deleteItem(id: $id) {
+      id
     }
   }
 `;

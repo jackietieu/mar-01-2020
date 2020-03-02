@@ -8,8 +8,6 @@ import CreateItem from "./components/CreateItem";
 
 const client = new ApolloClient({ uri: "http://localhost:4000" });
 
-// should support list, add and delete items
-
 ReactDOM.render(
   <ApolloProvider client={client}>
     <CreateItem />
