@@ -2,6 +2,10 @@ import React from "react";
 import { Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
 import { ITEMS_QUERY } from "./Items";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import Box from "@material-ui/core/Box";
 
 const CreateItem = () => {
   const [content, setContent] = React.useState("");
@@ -29,13 +33,26 @@ const CreateItem = () => {
                 setContent("");
               }}
             >
-              <h1>Create Item</h1>
-              <input
-                onChange={e => setContent(e.target.value)}
-                placeholder="Enter text here..."
-                value={content}
-              />
-              <input disabled={!content} type="submit" value="Create" />
+              <Typography variant="h4" style={{ marginBottom: "16px" }}>
+                Create Item
+              </Typography>
+              <Box display="flex" alignItems="center">
+                <TextField
+                  onChange={e => setContent(e.target.value)}
+                  label="Item Name"
+                  value={content}
+                  variant="outlined"
+                />
+                <Button
+                  disabled={!content}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  style={{ marginLeft: "16px" }}
+                >
+                  <Typography>Create</Typography>
+                </Button>
+              </Box>
             </form>
           </>
         );

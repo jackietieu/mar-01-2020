@@ -1,24 +1,28 @@
 import React from "react";
 import { Mutation, Query } from "react-apollo";
 import { gql } from "apollo-boost";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import ListItem from "@material-ui/core/ListItem";
+import Button from "@material-ui/core/Button";
 
 const Items = () => {
   return (
     <Query query={ITEMS_QUERY}>
       {({ data, loading, error }) => {
         if (loading) {
-          return <span>Loading ...</span>;
+          return <Typography>Loading ...</Typography>;
         }
 
         if (error) {
-          return <span>An unexpected error occured.</span>;
+          return <Typography>An unexpected error occured.</Typography>;
         }
 
         const { items } = data;
 
         return (
-          <>
-            <h1>Items</h1>
+          <Box style={{ marginTop: "24px" }}>
+            <Typography variant="h4">Items</Typography>
             <Mutation
               mutation={DELETE_ITEM_MUTATION}
               update={(cache, { data: { deleteItem } }) => {
@@ -35,9 +39,12 @@ const Items = () => {
               {deleteItem =>
                 items &&
                 items.map(item => (
-                  <div key={item.id}>
-                    {item.content}
-                    <button
+                  <ListItem key={item.id}>
+                    <Typography>{item.content}</Typography>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      style={{ marginLeft: "16px" }}
                       onClick={e => {
                         deleteItem({
                           variables: {
@@ -47,12 +54,12 @@ const Items = () => {
                       }}
                     >
                       Delete
-                    </button>
-                  </div>
+                    </Button>
+                  </ListItem>
                 ))
               }
             </Mutation>
-          </>
+          </Box>
         );
       }}
     </Query>
