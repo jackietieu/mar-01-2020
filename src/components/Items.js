@@ -23,42 +23,48 @@ const Items = () => {
         return (
           <Box style={{ marginTop: "24px" }}>
             <Typography variant="h4">Items</Typography>
-            <Mutation
-              mutation={DELETE_ITEM_MUTATION}
-              update={(cache, { data: { deleteItem } }) => {
-                const { items } = cache.readQuery({ query: ITEMS_QUERY });
+            {items.length ? (
+              <Mutation
+                mutation={DELETE_ITEM_MUTATION}
+                update={(cache, { data: { deleteItem } }) => {
+                  const { items } = cache.readQuery({ query: ITEMS_QUERY });
 
-                cache.writeQuery({
-                  query: ITEMS_QUERY,
-                  data: {
-                    items: items.filter(item => item.id !== deleteItem.id)
-                  }
-                });
-              }}
-            >
-              {deleteItem =>
-                items &&
-                items.map(item => (
-                  <ListItem key={item.id}>
-                    <Typography>{item.content}</Typography>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      style={{ marginLeft: "16px" }}
-                      onClick={e => {
-                        deleteItem({
-                          variables: {
-                            id: item.id
-                          }
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </ListItem>
-                ))
-              }
-            </Mutation>
+                  cache.writeQuery({
+                    query: ITEMS_QUERY,
+                    data: {
+                      items: items.filter(item => item.id !== deleteItem.id)
+                    }
+                  });
+                }}
+              >
+                {deleteItem =>
+                  items &&
+                  items.map(item => (
+                    <ListItem key={item.id}>
+                      <Typography>{item.content}</Typography>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        style={{ marginLeft: "16px" }}
+                        onClick={e => {
+                          deleteItem({
+                            variables: {
+                              id: item.id
+                            }
+                          });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </ListItem>
+                  ))
+                }
+              </Mutation>
+            ) : (
+              <Typography>
+                No items found. Please create items to get started.
+              </Typography>
+            )}
           </Box>
         );
       }}
